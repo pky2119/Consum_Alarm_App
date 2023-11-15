@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.View
 import android.widget.EditText
+import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
 
 class Regist : AppCompatActivity() {
@@ -27,10 +28,12 @@ class Regist : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            edtPurchaseDate.setText(formattedDate)
-        }, year, month, day)
+        val datePickerDialog =
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate =
+                    String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                edtPurchaseDate.setText(formattedDate)
+            }, year, month, day)
 
         datePickerDialog.show()
     }
@@ -41,10 +44,12 @@ class Regist : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            edtExpirationDate.setText(formattedDate)
-        }, year, month, day)
+        val datePickerDialog =
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate =
+                    String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                edtExpirationDate.setText(formattedDate)
+            }, year, month, day)
 
         datePickerDialog.show()
     }
@@ -56,11 +61,26 @@ class Regist : AppCompatActivity() {
         val price = findViewById<EditText>(R.id.edtPrice).text.toString()
         val expirationDate = findViewById<EditText>(R.id.edtExpirationDate).text.toString()
 
+
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("products")
+
+        // Product 객체 생성
+        val product = mapOf("productName" to productName,
+            "purchaseDate" to purchaseDate,
+            "price" to price,
+            "expirationDate" to expirationDate)
+
+        // Firebase 실시간 데이터베이스에 저장
+        myRef.push().setValue(product)
         // 정보를 캘린더 이벤트로 저장
         val intent = Intent(Intent.ACTION_INSERT).apply {
             data = CalendarContract.Events.CONTENT_URI
             putExtra(CalendarContract.Events.TITLE, "상품명: $productName, 가격: $price")
-            putExtra(CalendarContract.Events.DESCRIPTION, "구매일: $purchaseDate, 소비기한: $expirationDate")
+            putExtra(
+                CalendarContract.Events.DESCRIPTION,
+                "구매일: $purchaseDate, 소비기한: $expirationDate"
+            )
 
             // 이벤트 시작 및 종료 시간 설정 (예: 소비기한)
             // 소비기한을 yyyy-mm-dd 형식으로 변환 필요
@@ -76,5 +96,14 @@ class Regist : AppCompatActivity() {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
+
+        // 캘린더 화면으로 전환하기 위한 인텐트를 생성합니다.
+        val intentToMainCalendar = Intent(this, MainCalendar::class.java)
+
+        // 인텐트를 시작합니다.
+        startActivity(intentToMainCalendar)
+
+        // 현재 액티비티를 종료합니다.
+        finish()
     }
 }

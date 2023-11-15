@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66836290034",
+    "project_id": "consumalarmapp",
+    "storage_bucket": "consumalarmapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66836290034:android:b7bd576f3974de7b9f336b",
+        "android_client_info": {
+          "package_name": "com.example.consum_alarm_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzZMUuHVI30NtAb_SHMpcRThjAvOwpv1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

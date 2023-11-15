@@ -23,6 +23,7 @@
             android:layout_marginBottom="20dp" />
 
         <TextView
+            android:id="@+id/date_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="클릭한 날짜에 저장된 정보"/>
