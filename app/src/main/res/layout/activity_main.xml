@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        tools:context=".MainCalendar">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="캘린더"
+            android:gravity="center"
+            android:textSize="40dp"
+            android:layout_marginBottom="20dp"/>
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="클릭한 날짜에 저장된 정보"/>
+        <Button
+            android:id="@+id/regist_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="제품 등록하기"/>
+        <Button
+            android:id="@+id/regist_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="사진으로 제품 등록하기"/>
+        <Button
+            android:id="@+id/check_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="제품 조회하기"/>
+
+
+
+    </LinearLayout>
