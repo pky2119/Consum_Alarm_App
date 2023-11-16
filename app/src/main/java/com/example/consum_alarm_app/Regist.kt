@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.View
 import android.widget.EditText
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import java.util.Calendar
 
 class Regist : AppCompatActivity() {
     private lateinit var edtPurchaseDate: EditText
     private lateinit var edtExpirationDate: EditText
+    private val auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +58,10 @@ class Regist : AppCompatActivity() {
     }
 
     fun saveProductInfo(view: View) {
+        // 로그인 중인 사용자의 UID 가져오기
+        val user = auth.currentUser
+        val uid = user?.uid
+
         // EditText에서 정보 가져오기
         val productName = findViewById<EditText>(R.id.edtProductName).text.toString()
         val purchaseDate = findViewById<EditText>(R.id.edtPurchaseDate).text.toString()
@@ -72,7 +79,7 @@ class Regist : AppCompatActivity() {
             "expirationDate" to expirationDate)
 
         // Firebase 실시간 데이터베이스에 저장
-        myRef.push().setValue(product)
+        myRef.child(uid!!).push().setValue(product)
         // 정보를 캘린더 이벤트로 저장
         val intent = Intent(Intent.ACTION_INSERT).apply {
             data = CalendarContract.Events.CONTENT_URI
