@@ -7,11 +7,14 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 
 class MainCalendar : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var dateInfo: TextView
+    private val auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +40,11 @@ class MainCalendar : AppCompatActivity() {
     }
 
     private fun loadProductInfo(selectedDate: String) {
-        val myRef = database.getReference("products")
+        // 로그인 중인 사용자의 UID 가져오기
+        val user = auth.currentUser
+        val uid = user?.uid
+
+        val myRef = database.getReference("products").child(uid!!)
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val productInfoLayout = findViewById<LinearLayout>(R.id.productInfoLayout)
