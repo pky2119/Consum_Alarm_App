@@ -34,7 +34,7 @@
             android:name=".Regist_Infomation"
             android:exported="false" />
         <activity
-            android:name=".MainCalendar"
+            android:name=".MainPage"
             android:exported="false"/>
 
     </application>

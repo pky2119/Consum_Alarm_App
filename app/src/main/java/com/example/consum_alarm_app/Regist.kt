@@ -2,11 +2,11 @@ package com.example.consum_alarm_app
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
@@ -105,7 +105,7 @@ class Regist : AppCompatActivity() {
         }
 
         // 캘린더 화면으로 전환하기 위한 인텐트를 생성합니다.
-        val intentToMainCalendar = Intent(this, MainCalendar::class.java)
+        val intentToMainCalendar = Intent(this, MainPage::class.java)
 
         // 인텐트를 시작합니다.
         startActivity(intentToMainCalendar)
