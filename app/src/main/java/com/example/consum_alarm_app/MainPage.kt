@@ -13,6 +13,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class MainPage : AppCompatActivity() {
 
@@ -29,29 +33,38 @@ class MainPage : AppCompatActivity() {
         layoutManager = LinearLayoutManager(this)
         adapter = ProductAdapter()
 
-        // 리사이클러뷰에 레이아웃 매니저와 어댑터 설정
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
 
-        // Firebase Realtime Database 초기화
         val databaseUrl = "https://consumalarmapp-default-rtdb.firebaseio.com/"
         database = FirebaseDatabase.getInstance(databaseUrl).reference
 
-        // Firebase 사용자 인증 정보 가져오기
         val currentUser = FirebaseAuth.getInstance().currentUser
         val uid = currentUser!!.uid
 
-        // Firebase에서 현재 사용자의 상품 정보 가져오기
         val ref = database.child("products").child(uid)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val products = mutableListOf<Product>()
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+                val currentDate = Date()
+
                 for (productSnapshot in snapshot.children) {
                     val product = productSnapshot.getValue(Product::class.java)
-                    product?.let {
-                        products.add(it)
+
+                    if (product != null) {
+                        val expirationDate = sdf.parse(product.expirationDate)
+                        val diffInMillis = expirationDate.time - currentDate.time
+                        val diffInDays = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS)
+
+                        if (diffInDays >= 0) {
+                            product.remainingDays = diffInDays
+                            products.add(product)
+                        }
                     }
                 }
+
+                products.sortBy { it.remainingDays }
                 adapter.setData(products)
                 Log.d("MainPage", "데이터 가져오기 성공 - 상품 개수: ${products.size}")
             }
@@ -60,7 +73,6 @@ class MainPage : AppCompatActivity() {
                 Log.e("MainPage", "데이터 가져오기 실패: ${error.toException().message}")
             }
         })
-
 
         val btnRegistProduct = findViewById<Button>(R.id.regist_product)
         btnRegistProduct.setOnClickListener {
@@ -74,6 +86,6 @@ class MainPage : AppCompatActivity() {
         val purchaseDate: String ?= null,
         val price: String ?= null,
         val expirationDate: String ?= null,
-        val remainingExpiration: String ?= null
+        var remainingDays: Long = 0 // 추가된 속성
     )
 }

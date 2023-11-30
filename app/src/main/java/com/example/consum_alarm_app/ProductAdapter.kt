@@ -5,7 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
@@ -39,11 +42,18 @@ class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() 
         private val remainingExpirationTextView: TextView = itemView.findViewById(R.id.rectify_Remaining_expiration_date)
 
         fun bind(product: MainPage.Product) {
+            val expirationDateString = product.expirationDate
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+            val expirationDate = sdf.parse(expirationDateString)
+            val currentDate = Date()
+            val diffInMillis = expirationDate.time - currentDate.time
+            val diffInDays = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS)
+
             productNameTextView.text = "제품명: ${product.productName}"
             purchaseDateTextView.text = "제품 구매일: ${product.purchaseDate}"
             productPriceTextView.text = "제품 가격: ${product.price}"
             expirationDateTextView.text = "소비기한: ${product.expirationDate}"
-            remainingExpirationTextView.text = "남은 소비기한: ${product.remainingExpiration}"
+            remainingExpirationTextView.text = "남은 소비기한: ${diffInDays}일"
         }
     }
 }
