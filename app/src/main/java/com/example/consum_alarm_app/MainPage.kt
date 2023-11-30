@@ -79,6 +79,12 @@ class MainPage : AppCompatActivity() {
             val intent = Intent(this, Regist::class.java)
             startActivity(intent)
         }
+
+        val btnRegist_Infomation = findViewById<Button>(R.id.check_product)
+        btnRegist_Infomation.setOnClickListener {
+            val intent = Intent(this, Regist_Infomation::class.java)
+            startActivity(intent)
+        }
     }
 
     data class Product(
