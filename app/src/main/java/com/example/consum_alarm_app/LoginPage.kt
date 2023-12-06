@@ -2,6 +2,7 @@ package com.example.consum_alarm_app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,6 +12,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.android.gms.tasks.OnCompleteListener
 
 class LoginPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -18,6 +21,10 @@ class LoginPage : AppCompatActivity() {
     private lateinit var password: EditText
     private lateinit var loginButton: Button
     private lateinit var sign: TextView
+
+    companion object {
+        private const val TAG = "LoginPage"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +64,21 @@ class LoginPage : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             startActivity(Intent(this, MainPage::class.java))
+            generateFCMToken() // 토큰 생성 코드 실행
             finish()
         }
+    }
+
+    private fun generateFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "FCM 등록 토큰 가져오기 실패", task.exception)
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+            Log.d(TAG, "FCM 등록 토큰: $token")
+            // 토큰을 사용하여 원하는 작업 수행
+        })
     }
 }
